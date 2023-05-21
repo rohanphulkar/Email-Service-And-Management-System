@@ -1,0 +1,147 @@
+{% extends '../emails_base.html' %}
+{% block title %}
+{{mail.subject}}
+{% endblock title %}
+
+{% block script %}
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@tailwindcss/typography@0.4.x/dist/typography.min.css"
+/>
+{% endblock script %} {% block content %}
+<div class="max-w-3xl px-4 pb-12 sm:px-6 lg:px-8 mx-auto">
+  <div class="max-w-2xl">
+    <div class="flex justify-between items-center">
+      <div class="flex w-full sm:items-center gap-x-5 sm:gap-x-3">
+        <div class="flex-shrink-0">
+           <p class="text-lg bg-gray-800 rounded-full text-white p-2 px-4 inline-flex justify-center">{{mail.sender.name|slice:1|title}}</p>
+        </div>
+
+        <div class="grow">
+          <div class="grid sm:flex sm:justify-between sm:items-center gap-2">
+            <div>
+              <div
+                class="hs-tooltip inline-block [--trigger:hover] [--placement:bottom]"
+              >
+                <div
+                  class="hs-tooltip-toggle sm:mb-1 block text-left cursor-pointer"
+                >
+                  <span class="font-semibold text-gray-800">
+                    {{mail.sender.name}}
+                  </span>
+                </div>
+                <p class="text-sm text-gray-500" title="{{mail.sender}}">
+                  From : {{mail.sender}}
+                </p>
+                <p class="text-sm text-gray-500">
+                  To : {% for recipent in mail.recipients.all %}
+                  <span title="{{recipent}}">{{recipent.name}}, </span>
+                  {% endfor %}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-sm inline-flex">{{mail.timestamp|date:"M d, Y, h:i: A"}}</p>
+    </div>
+    <hr class="my-4" />
+
+    <div class="space-y-6">
+      <h2 class="text-lg font-bold md:text-xl">Subject : {{mail.subject}}</h2>
+
+      <div class="text-lg text-gray-800 prose prose-lg">{{mail.body|safe}}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky Share Group -->
+<div class="sticky bottom-6 inset-x-0 text-center">
+  <div
+    class="inline-block bg-white border shadow-lg border-gray-400 rounded-full py-3 px-4"
+  >
+    <div class="flex items-center gap-x-1.5">
+      <!-- Button -->
+      <div class="inline-block">
+        <a href="{% url 'star_mail' mail.id %}">
+        <button
+          type="button"
+          class="flex items-center gap-x-2 text-sm  {% if mail.starred %}text-yellow-600{% else %}text-gray-500  hover:text-gray-800{% endif %}"
+        >
+        <svg class="" width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26ZM12.0006 15.968L16.2473 18.3451L15.2988 13.5717L18.8719 10.2674L14.039 9.69434L12.0006 5.27502L9.96214 9.69434L5.12921 10.2674L8.70231 13.5717L7.75383 18.3451L12.0006 15.968Z"></path></svg>
+          </svg>
+          {% if mail.starred %}Starred{% else %}Star{% endif %}
+        </button></a>
+      </div>
+      <!-- Button -->
+
+      <div
+        class="block h-3 border-r border-gray-300 mx-3"
+      ></div>
+      <!-- Button -->
+      <div class="inline-block">
+        <a href="{% url 'archive_mail' mail.id %}">
+        <button
+          type="button"
+          class="flex items-center gap-x-2 text-sm text-cyan-500 hover:text-cyan-800"
+        >
+        <svg width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 3L22 7V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V7.00353L4 3H20ZM20 9H4V19H20V9ZM13 10V14H16L12 18L8 14H11V10H13ZM18.7639 5H5.23656L4.23744 7H19.7639L18.7639 5Z"></path></svg>
+            {% if mail.archived %}Unarchive{% else %}Archive{% endif %}
+        </button></a>
+      </div>
+      <!-- Button -->
+      {% if not mail.deleted %}
+      <div
+        class="block h-3 border-r border-gray-300 mx-3"
+      ></div>
+      <!-- Button -->
+      <div class="inline-block">
+        <a href="{% url 'delete_mail' mail.id %}">
+        <button
+          type="button"
+          class="flex items-center gap-x-2 text-sm text-red-500 hover:text-red-800"
+        >
+        <svg width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 7V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V7H2V5H22V7H20ZM6 7V20H18V7H6ZM11 9H13V11H11V9ZM11 12H13V14H11V12ZM11 15H13V17H11V15ZM7 2H17V4H7V2Z"></path></svg>
+            Delete
+        </button></a>
+      </div>
+      {% else %}
+      <div
+        class="block h-3 border-r border-gray-300 mx-3"
+      ></div>
+      <!-- Button -->
+      <div class="inline-block">
+        <a href="{% url 'restore_mail' mail.id %}">
+        <button
+          type="button"
+          class="flex items-center gap-x-2 text-sm text-blue-500 hover:text-blue-800"
+        >
+        <svg width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.46257 4.43262C7.21556 2.91688 9.5007 2 12 2C17.5228 2 22 6.47715 22 12C22 14.1361 21.3302 16.1158 20.1892 17.7406L17 12H20C20 7.58172 16.4183 4 12 4C9.84982 4 7.89777 4.84827 6.46023 6.22842L5.46257 4.43262ZM18.5374 19.5674C16.7844 21.0831 14.4993 22 12 22C6.47715 22 2 17.5228 2 12C2 9.86386 2.66979 7.88416 3.8108 6.25944L7 12H4C4 16.4183 7.58172 20 12 20C14.1502 20 16.1022 19.1517 17.5398 17.7716L18.5374 19.5674Z"></path></svg>
+            Restore
+        </button></a>
+      </div>
+      <!-- Button -->
+      
+      {% endif %}
+      {% if mail.spam %}
+      <div
+        class="block h-3 border-r border-gray-300 mx-3"
+      ></div>
+      <!-- Button -->
+      <div class="inline-block">
+        <a href="{% url 'not_spam' mail.id %}">
+        <button
+          type="button"
+          class="flex items-center gap-x-2 text-sm text-amber-500 hover:text-amber-800"
+        >
+        <svg width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.5 2.5L23 12L17.5 21.5H6.5L1 12L6.5 2.5H17.5ZM16.3469 4.5H7.65311L3.311 12L7.65311 19.5H16.3469L20.689 12L16.3469 4.5ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg> Not Spam
+        </button></a>
+      </div>
+      <!-- Button -->
+      {% endif %}
+    </div>
+  </div>
+</div>
+<!-- End Sticky Share Group -->
+
+{% endblock content %}

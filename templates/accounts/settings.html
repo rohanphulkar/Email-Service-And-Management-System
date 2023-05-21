@@ -1,0 +1,145 @@
+{% extends '../emails_base.html' %} {% block title %}Settings{% endblock title %} {% block content %}
+<!-- Card -->
+<div class="bg-white rounded-xl p-4 sm:p-7">
+  <div class="mb-8">
+    <h2 class="text-xl font-bold text-gray-800">Profile</h2>
+    <p class="text-sm text-gray-600">
+      Manage your name, password and account settings.
+    </p>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <!-- Grid -->
+    <div class="grid grid-cols-12 gap-1 sm:gap-6">
+      <div class="col-span-12 sm:col-span-3">
+        <label
+          for="full-name"
+          class="inline-block text-sm text-gray-800 mt-2.5"
+        >
+          Full name
+        </label>
+      </div>
+      <!-- End Col -->
+
+      <div class="col-span-12 sm:col-span-9">
+        <div class="sm:flex">
+          <input
+            id="full-name"
+            type="text"
+            name="full-name"
+            class="px-1.5 sm:px-3 py-1.5 sm:py-3 pr-11 block w-full border text-sm border-gray-300 -mt-px -ml-px rounded-md sm:mt-0 sm:first:ml-0 focus:outline-none text-gray-700"
+            value="{{user.name}}"
+          />
+        </div>
+      </div>
+      <!-- End Col -->
+
+      <div class="col-span-12 sm:col-span-3">
+        <label for="username" class="inline-block text-sm text-gray-800 mt-2.5">
+          Username
+        </label>
+      </div>
+      <!-- End Col -->
+
+      <div class="col-span-12 sm:col-span-9">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          disabled
+          class="px-1.5 sm:px-3 py-1.5 sm:py-3 pr-11 block w-full border border-gray-300 text-sm rounded-md focus:outline-none"
+          value="{{user}}"
+        />
+      </div>
+      <!-- End Col -->
+
+      <div class="col-span-12 sm:col-span-3">
+        <label
+          for="current-password"
+          class="inline-block text-sm text-gray-800 mt-2.5"
+        >
+          Password
+        </label>
+      </div>
+      <!-- End Col -->
+
+      <div class="col-span-12 sm:col-span-9">
+        <div class="space-y-6">
+          <input
+            id="current-password"
+            type="password"
+            name="current-password"
+            class="px-1.5 sm:px-3 py-1.5 sm:py-3 pr-11 block w-full border text-sm border-gray-300  rounded-md focus:outline-none"
+            placeholder="Enter Current Password"
+          />
+          <input
+            type="password"
+            id="new-password"
+            name="new-password"
+            class="px-1.5 sm:px-3 py-1.5 sm:py-3 pr-11 block w-full border text-sm border-gray-300  rounded-md focus:outline-none"
+            placeholder="Enter New Password"
+          />
+        </div>
+      </div>
+      <!-- End Col -->
+
+      <div class="col-span-12 sm:col-span-3">
+        <div class="inline-block">
+          <label for="phone" class="inline-block text-sm text-gray-800 mt-2.5">
+            Phone
+          </label>
+        </div>
+      </div>
+      <!-- End Col -->
+
+      <div class="col-span-12 sm:col-span-9">
+        <div class="sm:flex">
+          <input
+            id="phone"
+            type="tel"
+            name="phone"
+            class="px-1.5 sm:px-3 py-1.5 sm:py-3 pr-11 block w-full border text-sm border-gray-300  -mt-px -ml-px rounded-md sm:mt-0 sm:first:ml-0 relative focus:z-10 focus:outline-none"
+            value="{{user.phone}}"
+          />
+        </div>
+      </div>
+      <!-- End Col -->
+      <div class="col-span-12 sm:col-span-3">
+        <div class="inline-block">
+          <label for="gender" class="inline-block text-sm text-gray-800 mt-2.5">
+            Gender
+          </label>
+        </div>
+      </div>
+      <!-- End Col -->
+
+      <div class="col-span-12 sm:col-span-9">
+        <div class="sm:flex">
+          <select
+            id="gender"
+            name="gender"
+            class="px-1.5 sm:px-3 py-1.5 sm:py-3 pr-9 block w-full sm:w-auto text-sm border border-gray-300 -mt-px -ml-px rounded-md sm:mt-0 sm:first:ml-0 relative focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option selected hidden>{{user.gender|title}}</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+      </div>
+      <!-- End Col -->
+    </div>
+    <!-- End Grid -->
+
+    <div class="mt-5 flex justify-start gap-x-2">
+      <button
+        type="submit"
+        class="px-2 sm:px-3 py-1.5 sm:py-3 max-w-2xl w-full sm:w-64 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-[#3f00ff] text-white hover:bg-[#3500de] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+      >
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>
+<!-- End Card -->
+{% endblock content %}

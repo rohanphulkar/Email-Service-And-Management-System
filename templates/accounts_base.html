@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://res.cloudinary.com/rohanphulkar/image/upload/v1683959029/metabyte/metabyte.png"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>{% block title %}{% endblock title %} - Metabyte</title>
+  </head>
+  <body class="min-h-screen">
+    <div id="main-body" style="hidden">
+      <header
+        class="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-white text-sm py-4"
+      >
+        <nav
+          class="max-w-[85rem] w-full mx-auto px-4 flex items-center justify-between"
+          aria-label="Global"
+        >
+          <a class="flex items-center text-xl font-semibold" href="#">
+            <img
+              class="w-8 mr-3"
+              src="https://res.cloudinary.com/rohanphulkar/image/upload/v1683959029/metabyte/metabyte.png"
+            />
+            Metabyte
+          </a>
+          <div class="flex items-center space-x-4">
+            <div class="" id="login-button">
+              <a href="{% url 'login' %}">
+                <button
+                  type="button"
+                  class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-[#3f00ff] font-semibold text-gray-800 hover:text-white hover:bg-[#3f00ff] focus:outline-none transition-all text-sm"
+                >
+                  Login
+                </button>
+              </a>
+            </div>
+            <div class="" id="signup-button">
+              <a href="{% url 'signup' %}">
+                <button
+                  type="button"
+                  class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-[#3f00ff] font-semibold text-gray-800 hover:text-white hover:bg-[#3f00ff] focus:outline-none transition-all text-sm"
+                >
+                  Create Account
+                </button>
+              </a>
+            </div>
+          </div>
+        </nav>
+      </header>
+      {% block content %} {% endblock content %}
+    </div>
+    <script
+      defer
+      type="module"
+      src="https://res.cloudinary.com/rohanphulkar/raw/upload/v1673963494/synfert/preline_norz6c.js"
+    ></script>
+    <script>
+      // Get references to the login and signup buttons
+const loginBtn = document.getElementById("login-button");
+const signupBtn = document.getElementById("signup-button");
+
+// Extract the current path from the URL
+var currentPath = window.location.pathname.split("/")[2];
+
+// Determine the visibility of the login and signup buttons based on the current path
+if (currentPath == "register") {
+  // If the current path is "register", show the login button and hide the signup button
+  loginBtn.classList.remove("hidden");
+  signupBtn.classList.add("hidden");
+} else if (currentPath == "login") {
+  // If the current path is "login", show the signup button and hide the login button
+  loginBtn.classList.add("hidden");
+  signupBtn.classList.remove("hidden");
+} else {
+  // For any other path, hide the signup button
+  signupBtn.classList.add("hidden");
+}
+
+    </script>
+  </body>
+</html>

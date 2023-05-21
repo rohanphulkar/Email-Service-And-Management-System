@@ -1,0 +1,14 @@
+channels==3.0.4
+channels-redis==3.4.1
+Django
+django-ckeditor
+django-cloudinary-storage
+gunicorn
+joblib
+Markdown
+Pillow
+psycopg2-binary
+python-decouple
+scikit-learn
+uuid
+uvicorn

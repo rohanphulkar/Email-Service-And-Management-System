@@ -1,0 +1,287 @@
+{% extends '../emails_base.html' %}
+{% load static %}
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+<!-- Table Section -->
+
+
+  <!-- Header -->
+  <div
+    class="px-6 py-4 gap-3 flex justify-between"
+  >
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800">{{title}}</h2>
+    </div>
+    <div>
+      <div class="inline-flex gap-x-2">
+       
+        <button data-hs-overlay="#hs-modal-signin" class="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-[#3f00ff] text-white hover:bg-[#3500de] focus:outline-none transition-all text-sm">
+          <svg fill="#fff" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path></svg>
+          Compose
+        </button>
+      </div>
+    </div>
+    
+  </div>
+  <!-- End Header -->
+ 
+  <table class="w-full  bg-white text-left text-sm text-gray-500">
+    <tbody id="emails-table-body" class="divide-y divide-gray-100 ">
+        {% if emails %}
+        {% for email in emails %}
+       <tr class="hover:bg-gray-50 group">
+         <td class="flex gap-3 px-6 py-4 font-normal text-gray-900">
+                <a href="{% url 'mail' email.id %}" class="cursor-pointer flex space-x-4">
+                <div class="relative h-10 w-10">
+                  <p class="text-xs sm:text-sm bg-gray-800 rounded-full text-white p-2 px-4 inline-flex justify-center">{{email.sender.name|slice:1|title}}</p>
+                </div>
+                <div class="text-xs sm:text-sm">
+                  <div class="font-medium text-gray-700">{{email.sender.name}}</div>
+                  <div class="text-gray-400">{{email.sender}}</div>
+                </div>
+              </a>
+              </td>
+         <td class="gap-3 px-6 py-4 font-normal text-gray-900">
+                <a href="{% url 'mail' email.id %}" class="cursor-pointer flex space-x-4">
+                <div class="text-xs sm:text-sm">
+                  <div class="font-bold text-gray-700">{{email.subject|slice:50}}</div>
+                </div>
+              </a>
+              </td>
+              <td class="px-6 py-4 text-xs sm:text-sm">
+                <a href="{% url 'mail' email.id %}" class="cursor-pointer flex space-x-4">
+                {{email.body|safe|slice:100}}</a>
+              </td>
+              <td class="px-6 py-4 text-xs sm:text-sm">
+                <a href="{% url 'mail' email.id %}" class="cursor-pointer flex space-x-4">
+               <span class="sm:block hidden"> {{email.timestamp|date:"M d, Y, h:i: A"}}</span>
+               <span class="sm:hidden"> {{email.timestamp|date:"M d, y, h:i: A"}}</span>
+              </a>
+              </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+  <!-- End Table -->
+
+  <!-- Footer -->
+  <div
+    class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center {% if emails %} border-t border-gray-100{% endif %}"
+  >
+    
+<span id="socket-message"></span>
+    <div>
+      <div class="inline-flex gap-x-2">
+        {% if emails.has_previous %}
+        <a href="?page={{emails.previous_page_number}}">
+        <button
+          type="button"
+          class="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
+        >
+          <svg
+            class="w-3 h-3"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
+          </svg>
+          Prev
+        </button>
+        </a>
+        {% endif %}
+        {% if emails.has_next %}
+        <a href="?page={{emails.next_page_number}}">
+        <button
+          type="button"
+          class="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
+        >
+          Next
+          <svg
+            class="w-3 h-3"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </button></a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <!-- End Footer -->
+</div>
+<!-- End Table Section -->
+
+<!-- Sticky Group -->
+
+<div class="sticky bottom-6 inset-x-0 text-center hidden" id="empty-trash-button">
+  <div
+    class="inline-block bg-white border shadow-lg border-gray-400 rounded-full py-3 px-4"
+  >
+    <div class="flex items-center gap-x-1.5">
+      <!-- Button -->
+      <div class="inline-block">
+        <a href="{% url 'permanent_delete' %}">
+        <button
+          type="button"
+          class="flex items-center gap-x-2 font-semibold text-sm text-red-500 hover:text-red-600"
+        > Empty Trash
+        </button></a>
+      </div>
+      <!-- Button -->
+    </div>
+  </div>
+</div>
+<!-- End Sticky Group -->
+
+<!-- Compose mail form model -->
+<div id="hs-modal-signin" class="hs-overlay hidden w-full h-full fixed top-0 left-0 z-[60] overflow-x-hidden overflow-y-auto">
+  <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-3xl sm:w-full m-3 sm:mx-auto">
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm0">
+      <div class="p-4 sm:p-7">
+        <div class="text-center">
+          <h2 class="block text-2xl font-bold text-gray-800">Compose</h2>
+        </div>
+
+        <div class="mt-5">
+          <!-- Form -->
+          <form method="post" id="compose-mail-form">
+         
+            <div class="grid gap-y-4">
+              <!-- Form Group -->
+              <div>
+                <label for="recipient" class="block text-sm mb-2">To: (Add multiple recipients separated by comma.)</label>
+                <div class="relative">
+                  <input type="text" id="recipient" name="recipient" class="py-3 px-4 block w-full border border-gray-300 rounded-md text-sm focus:outline-none" required>
+                </div>
+              </div>
+              <!-- End Form Group -->
+              <!-- Form Group -->
+              <div>
+                <label for="subject" class="block text-sm mb-2">Subject:</label>
+                <div class="relative">
+                  <input type="text" id="subject" name="subject" class="py-3 px-4 block w-full border border-gray-300 rounded-md text-sm focus:outline-none" required>
+                </div>
+              </div>
+              <!-- End Form Group -->
+              <!-- Form Group -->
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                <label for="body" class="block text-sm mb-2">Body:</label>
+              
+              </div>
+                <div class="relative">
+                  <textarea  id="body" name="body" rows="15" class="py-3 px-4 block w-full border border-gray-300 rounded-md text-sm focus:outline-none" required></textarea>
+                </div>
+              </div>
+              <!-- End Form Group -->
+
+              <button type="submit" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-[#3f00ff] text-white hover:bg-[#3500de] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm">Send</button>
+            </div>
+          </form>
+          <!-- End Form -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Compose mail form model end -->
+
+<script>
+  // Create a WebSocket connection using the current host and the WebSocket endpoint
+const socket = new WebSocket(`ws://${window.location.host}/ws/email/`);
+
+// Get the elements from the DOM
+const composeMailSubmitBtn = document.getElementById("compose-mail-submit-btn");
+const emailTableBody = document.getElementById("emails-table-body");
+const composeMailForm = document.getElementById("compose-mail-form");
+const currentUser = "{{request.user}}";
+
+// Event listener for incoming WebSocket messages
+socket.onmessage = function (e) {
+  // Parse the received data as JSON
+  let data = JSON.parse(e.data);
+
+  // Check if the recipient includes the current user and if it's not a spam email
+  if (data.recipient.includes(currentUser) && !data.spam) {
+    // Construct the HTML for the new email row
+    const emailRowHTML = `
+      <tr class="hover:bg-gray-50 group">
+        <td class="flex gap-3 px-6 py-4 font-normal text-gray-900">
+          <a href="/${data.id}" class="cursor-pointer flex space-x-4">
+            <div class="relative h-10 w-10">
+            <p class="text-lg bg-gray-800 rounded-full text-white p-2 px-4 inline-flex justify-center">${data.sender_name
+              .slice(0,1)
+              .toUpperCase()}</p>
+            </div>
+            <div class="text-sm">
+              <div class="font-medium text-gray-700">${data.sender_name}</div>
+              <div class="text-gray-400">${data.sender}</div>
+            </div>
+          </a>
+        </td>
+        <td class="gap-3 px-6 py-4 font-normal text-gray-900">
+          <a href="/${data.id}" class="cursor-pointer flex space-x-4">
+            <div class="text-sm">
+              <div class="font-bold text-gray-700">${data.subject.slice(
+                0,
+                50
+              )}</div>
+            </div>
+          </a>
+        </td>
+        <td class="px-6 py-4 text-sm">
+          <a href="/${data.id}" class="cursor-pointer flex space-x-4">
+            ${data.body.slice(0, 100)}
+          </a>
+        </td>
+        <td class="px-6 py-4 text-sm">
+          <a href="/${data.id}" class="cursor-pointer flex space-x-4">
+            ${data.timestamp}
+          </a>
+        </td>
+      </tr>
+    `;
+
+    // Add the new email row to the top of the email table body
+    emailTableBody.innerHTML = emailRowHTML + emailTableBody.innerHTML;
+  }
+};
+
+// Event listener for the compose mail form submission
+composeMailForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  // Get the values from the form fields
+  let recipient = e.target.recipient.value;
+  let subject = e.target.subject.value;
+  let body = e.target.body.value;
+
+  // Send the composed email data to the server via WebSocket
+  socket.send(
+    JSON.stringify({
+      user: "{{request.user.id}}",
+      sender: "{{request.user.id}}",
+      recipient: recipient.split(","),
+      subject: subject,
+      body: body,
+    })
+  );
+});
+
+</script>
+{% endblock content %}
